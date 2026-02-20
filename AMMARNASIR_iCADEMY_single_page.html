@@ -515,6 +515,13 @@
       border-radius: 10px;
       font-size: 0.85rem;
     }
+
+    /* تخصيص اسم الباحث */
+    .researcher-name {
+      color: var(--good);
+      font-weight: 600;
+      border-bottom: 1px dotted var(--good);
+    }
   </style>
 </head>
 <body>
@@ -574,6 +581,7 @@
             <b>مهم:</b> حتى تعمل الـPDF والبحث بشكل صحيح، افتح الصفحة عبر رابط (GitHub Pages/Netlify) أو عبر سيرفر محلي. فتحها مباشرة كملف (file://) قد يسبب مشاكل.
             <div style="margin-top:8px">ضع ملفات PDF بنفس مجلد هذه الصفحة بأسماء:</div>
             <div style="margin-top:6px"><code>book_g4.pdf</code> • <code>book_g5.pdf</code> • <code>book_g6.pdf</code> • <code>teacher_guide.pdf</code></div>
+            <div style="margin-top:8px; color: var(--good);">🔬 الباحث: <span class="researcher-name">Ammar Nasir Hussein al-Mantafji</span></div>
           </div>
         </div>
       </div>
@@ -799,7 +807,7 @@
       </div>
     </div>
 
-    <div class="footer">© AMMARNASIR+//i\-CADEMY • Single-file HTML • PDF-first learning • Student BYO AI Key</div>
+    <div class="footer">© AMMARNASIR+//i\-CADEMY • Single-file HTML • PDF-first learning • Student BYO AI Key • Researcher: Ammar Nasir Hussein al-Mantafji</div>
   </main>
 
   <div class="toast" id="toast"></div>
@@ -935,17 +943,33 @@
         activateTabs();
       }
 
-      // --- دوال PDF والفهرس ---
+      // دالة للتحقق من وجود ملف PDF
+      async function checkPdfExists(url) {
+        try {
+          const response = await fetch(url, { method: 'HEAD', cache: 'no-cache' });
+          return response.ok;
+        } catch {
+          return false;
+        }
+      }
+
+      // تعديل دالة openPdf للتحقق من وجود الملف أولاً
       async function openPdf() {
         const file = currentPdfFile();
+        const exists = await checkPdfExists(file);
+        if (!exists) {
+          $("pdfStatus").textContent = (lang === "ar") ?
+            `⚠️ الملف ${file} غير موجود. تأكد من وضعه في نفس مجلد الصفحة.` :
+            `⚠️ File ${file} not found. Please place it in the same folder.`;
+          $("pdfEmbed").removeAttribute("src");
+          toast((lang === "ar") ? "ملف PDF غير موجود" : "PDF file not found");
+          return;
+        }
         $("pdfEmbed").setAttribute("src", file);
         $("pdfName").textContent = file;
         $("pdfStatus").textContent = (lang === "ar") ? "يحاول تحميل PDF…" : "Loading PDF…";
         try {
-          // تأكد من وجود المكتبة
-          if (!window.pdfjsLib) {
-            throw new Error("pdf.js لم يتم تحميله");
-          }
+          if (!window.pdfjsLib) throw new Error("pdf.js لم يتم تحميله");
           pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.worker.min.js";
           const task = pdfjsLib.getDocument(file);
           pdfDoc = await task.promise;
@@ -954,7 +978,9 @@
           toast((lang === "ar") ? "تم تحميل PDF بنجاح" : "PDF loaded");
         } catch (e) {
           console.error(e);
-          $("pdfStatus").textContent = (lang === "ar") ? "فشل تحميل PDF. تأكد من وجود الملف بجانب الصفحة وفتحها عبر رابط." : "Failed to load PDF. Put the file next to HTML and open via hosted URL.";
+          $("pdfStatus").textContent = (lang === "ar") ?
+            "فشل تحميل PDF. تأكد من صحة الملف وأنك تفتح الصفحة عبر خادم محلي." :
+            "Failed to load PDF. Ensure file is valid and you're using a local server.";
           toast((lang === "ar") ? "تعذر تحميل PDF" : "PDF load failed");
         }
       }
@@ -1450,8 +1476,8 @@
         loadWazariUI();
         syncAIUI();
         addMsg("ai", (lang === "ar") ?
-          "مرحباً 👋\nاختر المرحلة، افتح الكتاب، ابنِ الفهرس، ثم اسألني. إذا ما عندك مفتاح، وضع Local يساعدك بخطوات الحل." :
-          "Hi 👋\nPick a grade, open PDF, build index, then ask. Without a key, Local mode still guides you.");
+          "مرحباً Ammar Nasir Hussein al-Mantafji 👋\nاختر المرحلة، افتح الكتاب، ابنِ الفهرس، ثم اسألني. إذا ما عندك مفتاح، وضع Local يساعدك بخطوات الحل." :
+          "Hi Ammar Nasir Hussein al-Mantafji 👋\nPick a grade, open PDF, build index, then ask. Without a key, Local mode still guides you.");
       }
       init();
     })();
