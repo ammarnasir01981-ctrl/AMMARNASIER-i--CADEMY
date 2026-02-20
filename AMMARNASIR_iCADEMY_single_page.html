@@ -522,6 +522,21 @@
       font-weight: 600;
       border-bottom: 1px dotted var(--good);
     }
+
+    /* منطقة رفع الملفات */
+    .file-upload-area {
+      background: rgba(0, 0, 0, 0.2);
+      border: 2px dashed var(--accent);
+      border-radius: 14px;
+      padding: 20px;
+      text-align: center;
+      margin: 15px 0;
+    }
+
+    .file-upload-area.drag-over {
+      background: rgba(122, 167, 255, 0.1);
+      border-color: var(--good);
+    }
   </style>
 </head>
 <body>
@@ -579,8 +594,7 @@
 
           <div class="hint" id="deployHint">
             <b>مهم:</b> حتى تعمل الـPDF والبحث بشكل صحيح، افتح الصفحة عبر رابط (GitHub Pages/Netlify) أو عبر سيرفر محلي. فتحها مباشرة كملف (file://) قد يسبب مشاكل.
-            <div style="margin-top:8px">ضع ملفات PDF بنفس مجلد هذه الصفحة بأسماء:</div>
-            <div style="margin-top:6px"><code>book_g4.pdf</code> • <code>book_g5.pdf</code> • <code>book_g6.pdf</code> • <code>teacher_guide.pdf</code></div>
+            <div style="margin-top:8px">يمكنك أيضاً <b>رفع ملف PDF يدوياً</b> من جهازك باستخدام الخيارات أدناه.</div>
             <div style="margin-top:8px; color: var(--good);">🔬 الباحث: <span class="researcher-name">Ammar Nasir Hussein al-Mantafji</span></div>
           </div>
         </div>
@@ -596,9 +610,25 @@
             <div class="two">
               <div>
                 <div class="row">
-                  <button class="btn primary" id="openPdfBtn">فتح PDF</button>
+                  <button class="btn primary" id="openPdfBtn">فتح PDF (من المسار)</button>
                   <button class="btn" id="buildIndexBtn">بناء فهرس النص (مرة واحدة)</button>
                   <button class="btn" id="clearIndexBtn">مسح الفهرس</button>
+                </div>
+                <div class="divider"></div>
+                <div class="file-upload-area" id="uploadArea">
+                  <div style="margin-bottom: 10px;">
+                    <i class="fas fa-cloud-upload-alt" style="font-size: 2rem; color: var(--accent);"></i>
+                  </div>
+                  <div class="row" style="justify-content: center;">
+                    <button class="btn primary" id="uploadPdfBtn">
+                      <i class="fas fa-upload"></i> رفع PDF من جهازي
+                    </button>
+                    <input type="file" id="pdfFileInput" accept=".pdf" style="display: none;">
+                    <button class="btn" id="resetPdfBtn" style="display: none;">
+                      <i class="fas fa-times"></i> إلغاء الملف المرفوع
+                    </button>
+                  </div>
+                  <div class="small muted" style="margin-top: 8px;" id="uploadStatus"></div>
                 </div>
                 <div class="divider"></div>
                 <div class="row">
@@ -795,7 +825,7 @@
             <div class="hint" id="howText">
               <b>طريقة الاستخدام:</b><br/><br/>
               1) اختر المرحلة.<br/>
-              2) افتح “الكتاب” → “فتح PDF”.<br/>
+              2) افتح “الكتاب” → “فتح PDF” أو ارفع ملف PDF يدوياً.<br/>
               3) “بناء فهرس النص” مرة واحدة ثم ابحث عن الموضوع.<br/>
               4) “إضافة مقتطفات” ثم اسأل AI ليجيب بدقة مع صفحات.<br/>
               5) “الملزمة” للشرح المفصل + أمثلة + حلول خطوة بخطوة.<br/>
@@ -813,6 +843,9 @@
   <div class="toast" id="toast"></div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.js"></script>
+  <script src="https://kit.fontawesome.com/your-fontawesome-kit.js" crossorigin="anonymous"></script>
+  <!-- استخدم Font Awesome من CDN بدلاً من kit إن لم يكن متاحاً -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
 
   <script>
     (function() {
@@ -841,6 +874,7 @@
       let pdfDoc = null;
       let pdfTextIndex = null;
       let lastSearchSnips = []; // مقتطفات آخر بحث
+      let uploadedPdfBlobUrl = null; // رابط الملف المرفوع
 
       // دوال مساعدة
       const $ = (id) => document.getElementById(id);
@@ -898,6 +932,10 @@
       }
 
       function currentPdfFile() {
+        // إذا كان هناك ملف مرفوع، نعيد مساره
+        if (uploadedPdfBlobUrl) {
+          return uploadedPdfBlobUrl;
+        }
         if (grade === "g4") return PDF_FILES.g4;
         if (grade === "g5") return PDF_FILES.g5;
         return PDF_FILES.g6;
@@ -943,8 +981,10 @@
         activateTabs();
       }
 
-      // دالة للتحقق من وجود ملف PDF
+      // دالة للتحقق من وجود ملف PDF (للمسار العادي)
       async function checkPdfExists(url) {
+        // إذا كان Blob URL، نعتبره موجوداً
+        if (url && url.startsWith('blob:')) return true;
         try {
           const response = await fetch(url, { method: 'HEAD', cache: 'no-cache' });
           return response.ok;
@@ -953,29 +993,25 @@
         }
       }
 
-      // تعديل دالة openPdf للتحقق من وجود الملف أولاً
-      async function openPdf() {
-        const file = currentPdfFile();
-        const exists = await checkPdfExists(file);
-        if (!exists) {
-          $("pdfStatus").textContent = (lang === "ar") ?
-            `⚠️ الملف ${file} غير موجود. تأكد من وضعه في نفس مجلد الصفحة.` :
-            `⚠️ File ${file} not found. Please place it in the same folder.`;
-          $("pdfEmbed").removeAttribute("src");
-          toast((lang === "ar") ? "ملف PDF غير موجود" : "PDF file not found");
-          return;
-        }
-        $("pdfEmbed").setAttribute("src", file);
-        $("pdfName").textContent = file;
+      // دالة مخصصة لفتح PDF من المسار (قد يكون Blob أو مساراً عادياً)
+      async function openPdfFromSource(src) {
+        $("pdfEmbed").setAttribute("src", src);
+        $("pdfName").textContent = typeof src === 'string' && src.startsWith('blob:') ? 'ملف مرفوع' : src;
         $("pdfStatus").textContent = (lang === "ar") ? "يحاول تحميل PDF…" : "Loading PDF…";
         try {
           if (!window.pdfjsLib) throw new Error("pdf.js لم يتم تحميله");
           pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.worker.min.js";
-          const task = pdfjsLib.getDocument(file);
+          const task = pdfjsLib.getDocument(src);
           pdfDoc = await task.promise;
           $("pdfStatus").textContent = (lang === "ar") ? "تم تحميل PDF." : "PDF loaded.";
           $("pdfPages").textContent = (lang === "ar") ? ("عدد الصفحات: " + pdfDoc.numPages) : ("Pages: " + pdfDoc.numPages);
           toast((lang === "ar") ? "تم تحميل PDF بنجاح" : "PDF loaded");
+          // إظهار زر إلغاء الملف المرفوع
+          if (uploadedPdfBlobUrl) {
+            $("resetPdfBtn").style.display = 'inline-flex';
+          } else {
+            $("resetPdfBtn").style.display = 'none';
+          }
         } catch (e) {
           console.error(e);
           $("pdfStatus").textContent = (lang === "ar") ?
@@ -985,11 +1021,111 @@
         }
       }
 
+      // تعديل دالة openPdf للتحقق من وجود الملف أولاً
+      async function openPdf() {
+        const file = currentPdfFile();
+        // إذا كان الملف مرفوعاً، نفتحه مباشرة
+        if (uploadedPdfBlobUrl) {
+          openPdfFromSource(uploadedPdfBlobUrl);
+          return;
+        }
+        const exists = await checkPdfExists(file);
+        if (!exists) {
+          $("pdfStatus").textContent = (lang === "ar") ?
+            `⚠️ الملف ${file} غير موجود. يمكنك رفعه يدوياً من جهازك.` :
+            `⚠️ File ${file} not found. You can upload it manually.`;
+          $("pdfEmbed").removeAttribute("src");
+          toast((lang === "ar") ? "ملف PDF غير موجود" : "PDF file not found");
+          return;
+        }
+        openPdfFromSource(file);
+      }
+
+      // رفع ملف PDF من الجهاز
+      function setupFileUpload() {
+        const uploadBtn = $("uploadPdfBtn");
+        const fileInput = $("pdfFileInput");
+        const resetBtn = $("resetPdfBtn");
+        const uploadStatus = $("uploadStatus");
+
+        uploadBtn.addEventListener("click", () => {
+          fileInput.click();
+        });
+
+        fileInput.addEventListener("change", (e) => {
+          const file = e.target.files[0];
+          if (!file) return;
+
+          // التحقق من أن الملف PDF
+          if (file.type !== 'application/pdf') {
+            toast((lang === "ar") ? "الرجاء اختيار ملف PDF صالح" : "Please select a valid PDF file");
+            return;
+          }
+
+          // إنشاء Blob URL
+          if (uploadedPdfBlobUrl) {
+            URL.revokeObjectURL(uploadedPdfBlobUrl);
+          }
+          uploadedPdfBlobUrl = URL.createObjectURL(file);
+          
+          // تحديث الواجهة
+          uploadStatus.textContent = (lang === "ar") ? `✅ تم رفع: ${file.name}` : `✅ Uploaded: ${file.name}`;
+          toast((lang === "ar") ? "تم رفع الملف بنجاح" : "File uploaded successfully");
+          
+          // فتح PDF
+          openPdfFromSource(uploadedPdfBlobUrl);
+          
+          // إظهار زر الإلغاء
+          resetBtn.style.display = 'inline-flex';
+        });
+
+        resetBtn.addEventListener("click", () => {
+          if (uploadedPdfBlobUrl) {
+            URL.revokeObjectURL(uploadedPdfBlobUrl);
+            uploadedPdfBlobUrl = null;
+          }
+          fileInput.value = '';
+          uploadStatus.textContent = '';
+          resetBtn.style.display = 'none';
+          $("pdfEmbed").removeAttribute("src");
+          $("pdfName").textContent = '';
+          $("pdfPages").textContent = '';
+          $("pdfStatus").textContent = (lang === "ar") ? "تم إلغاء الملف المرفوع." : "Uploaded file cleared.";
+          pdfDoc = null;
+          setIndexStatus();
+        });
+
+        // سحب وإفلات
+        const uploadArea = $("uploadArea");
+        uploadArea.addEventListener("dragover", (e) => {
+          e.preventDefault();
+          uploadArea.classList.add("drag-over");
+        });
+        uploadArea.addEventListener("dragleave", () => {
+          uploadArea.classList.remove("drag-over");
+        });
+        uploadArea.addEventListener("drop", (e) => {
+          e.preventDefault();
+          uploadArea.classList.remove("drag-over");
+          const files = e.dataTransfer.files;
+          if (files.length > 0 && files[0].type === 'application/pdf') {
+            fileInput.files = files;
+            // trigger change event
+            const event = new Event('change', { bubbles: true });
+            fileInput.dispatchEvent(event);
+          } else {
+            toast((lang === "ar") ? "الرجاء إفلات ملف PDF فقط" : "Please drop a PDF file only");
+          }
+        });
+      }
+
       function loadPdfIndexFromStorage() {
         try {
           const raw = localStorage.getItem(LS.pdfIndex);
           if (!raw) return null;
           const obj = JSON.parse(raw);
+          // يجب أن نتحقق من أن الفهرس يتطابق مع الملف الحالي، لكن مع الملف المرفوع يصعب.
+          // سنعتمد على أن المستخدم سيبني الفهرس بعد الرفع.
           if (obj && obj.file === currentPdfFile()) return obj;
           return null;
         } catch {
@@ -1242,9 +1378,12 @@
           localStorage.setItem(LS.grade, grade);
           if (grade !== "g6" && page === "wazari") page = "book";
           pdfDoc = null;
-          $("pdfEmbed").removeAttribute("src");
+          // لا نغير مصدر PDF إذا كان هناك ملف مرفوع
+          if (!uploadedPdfBlobUrl) {
+            $("pdfEmbed").removeAttribute("src");
+          }
           $("pdfStatus").textContent = (lang === "ar") ? "لم يتم تحميل PDF بعد." : "PDF not loaded.";
-          $("pdfName").textContent = "";
+          $("pdfName").textContent = uploadedPdfBlobUrl ? 'ملف مرفوع' : '';
           $("pdfPages").textContent = "";
           renderTexts();
           loadNotesUI();
@@ -1270,6 +1409,9 @@
       $("clearIndexBtn").addEventListener("click", clearIndex);
       $("searchBtn").addEventListener("click", () => searchInIndex($("searchBox").value));
       $("searchBox").addEventListener("keydown", (e) => { if (e.key === "Enter") searchInIndex($("searchBox").value); });
+
+      // رفع الملفات
+      setupFileUpload();
 
       // Notes
       $("notesTopic").addEventListener("change", loadNotesUI);
@@ -1476,8 +1618,8 @@
         loadWazariUI();
         syncAIUI();
         addMsg("ai", (lang === "ar") ?
-          "مرحباً Ammar Nasir Hussein al-Mantafji 👋\nاختر المرحلة، افتح الكتاب، ابنِ الفهرس، ثم اسألني. إذا ما عندك مفتاح، وضع Local يساعدك بخطوات الحل." :
-          "Hi Ammar Nasir Hussein al-Mantafji 👋\nPick a grade, open PDF, build index, then ask. Without a key, Local mode still guides you.");
+          "مرحباً Ammar Nasir Hussein al-Mantafji 👋\nاختر المرحلة، افتح الكتاب، ابنِ الفهرس، ثم اسألني. يمكنك أيضاً رفع ملف PDF يدوياً إذا لم يعمل المسار." :
+          "Hi Ammar Nasir Hussein al-Mantafji 👋\nPick a grade, open PDF, build index, then ask. You can also upload a PDF file manually if the path doesn't work.");
       }
       init();
     })();
