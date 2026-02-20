@@ -1,0 +1,740 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+  <title>AMMARNASIR+//i\-CADEMY | Chemistry (4/5/6)</title>
+  <meta name="theme-color" content="#0b1220"/>
+  <style>
+    :root{
+      --bg0:#060a14; --bg1:#0b1220; --bg2:#0f1b33;
+      --card:rgba(255,255,255,.06); --line:rgba(255,255,255,.10);
+      --text:rgba(255,255,255,.92); --muted:rgba(255,255,255,.70); --muted2:rgba(255,255,255,.55);
+      --accent:#7aa7ff; --good:#5eead4; --warn:#fbbf24; --bad:#fb7185;
+      --shadow: 0 18px 60px rgba(0,0,0,.55); --r:18px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial; color:var(--text);
+      background:
+        radial-gradient(1200px 700px at 18% 8%, rgba(122,167,255,.16), transparent 55%),
+        radial-gradient(1000px 700px at 82% 18%, rgba(251,113,133,.12), transparent 55%),
+        radial-gradient(900px 600px at 55% 92%, rgba(94,234,212,.10), transparent 60%),
+        linear-gradient(160deg, var(--bg0), var(--bg1), var(--bg2));
+      min-height:100vh; overflow-x:hidden;
+    }
+    a{color:inherit}
+    .wrap{max-width:1200px;margin:0 auto;padding:18px}
+    header{
+      position:sticky;top:0;z-index:50;
+      backdrop-filter: blur(12px);
+      background: linear-gradient(to bottom, rgba(6,10,20,.86), rgba(6,10,20,.55));
+      border-bottom:1px solid var(--line);
+    }
+    .topbar{display:flex;gap:12px;align-items:center;justify-content:space-between;padding:14px 18px}
+    .brand{display:flex;gap:12px;align-items:center}
+    .logo{
+      width:44px;height:44px;border-radius:14px;
+      background: radial-gradient(circle at 30% 30%, rgba(122,167,255,.85), rgba(251,113,133,.35), rgba(94,234,212,.25));
+      box-shadow:0 10px 30px rgba(0,0,0,.35);
+      position:relative;overflow:hidden;
+    }
+    .logo::after{
+      content:""; position:absolute; inset:-40%;
+      background: conic-gradient(from 180deg, rgba(255,255,255,.0), rgba(255,255,255,.18), rgba(255,255,255,.0));
+      animation: spin 4.8s linear infinite;
+    }
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .brand h1{margin:0;font-size:16px;letter-spacing:.2px}
+    .brand .sub{margin-top:2px;font-size:12px;color:var(--muted)}
+    .controls{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+    .pill{
+      border:1px solid var(--line); background:rgba(255,255,255,.04);
+      padding:8px 10px;border-radius:999px;font-size:12px;color:var(--muted);
+      display:flex;gap:8px;align-items:center
+    }
+    .btn{
+      border:1px solid var(--line); background:rgba(255,255,255,.06);
+      padding:10px 12px;border-radius:14px;color:var(--text);
+      cursor:pointer;transition:transform .08s ease, background .2s ease;
+      display:inline-flex;gap:8px;align-items:center;justify-content:center;
+      user-select:none
+    }
+    .btn:hover{background:rgba(255,255,255,.10)}
+    .btn:active{transform:scale(.98)}
+    .btn.primary{background:linear-gradient(135deg, rgba(122,167,255,.35), rgba(94,234,212,.20));border-color:rgba(122,167,255,.35)}
+    .btn.ghost{background:transparent}
+    .grid{display:grid;gap:14px}
+    .grid.cols{grid-template-columns: 320px 1fr}
+    @media (max-width: 980px){.grid.cols{grid-template-columns:1fr}}
+    .card{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:var(--r);
+      box-shadow: var(--shadow);
+    }
+    .card .hd{padding:14px 14px 10px;border-bottom:1px solid var(--line)}
+    .card .hd .t{font-weight:800}
+    .card .hd .d{color:var(--muted);font-size:12px;margin-top:4px;line-height:1.6}
+    .card .bd{padding:14px}
+    .tabs{display:flex;gap:8px;flex-wrap:wrap}
+    .tab{
+      padding:10px 12px;border-radius:14px;
+      border:1px solid var(--line); background:rgba(255,255,255,.05);
+      cursor:pointer;font-weight:700;font-size:13px;color:var(--muted);
+    }
+    .tab.active{background:rgba(122,167,255,.18); color:var(--text); border-color:rgba(122,167,255,.25)}
+    .section{display:none}
+    .section.active{display:block}
+    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+    .muted{color:var(--muted)}
+    .muted2{color:var(--muted2)}
+    .small{font-size:12px}
+    .kpi{display:flex;gap:10px;flex-wrap:wrap}
+    .kpi .box{
+      padding:10px 12px;border-radius:14px;border:1px solid var(--line);
+      background:rgba(255,255,255,.04);min-width:150px
+    }
+    .kpi .box b{display:block}
+    .kpi .box span{color:var(--muted);font-size:12px}
+    .divider{height:1px;background:var(--line);margin:12px 0}
+    input, select, textarea{
+      background:rgba(0,0,0,.28);
+      border:1px solid var(--line);
+      color:var(--text);
+      border-radius:14px;
+      padding:10px 12px;
+      outline:none;
+      width:100%;
+      font-family:inherit;
+    }
+    textarea{min-height:120px;resize:vertical}
+    .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    @media (max-width:780px){.two{grid-template-columns:1fr}}
+    .viewer{
+      width:100%; height:68vh;
+      border:1px solid var(--line);
+      border-radius:16px;
+      background:rgba(0,0,0,.25);
+      overflow:hidden;
+    }
+    .hint{
+      padding:10px 12px;border-radius:14px;border:1px dashed rgba(255,255,255,.18);
+      background:rgba(255,255,255,.03);color:var(--muted);font-size:12px;line-height:1.7
+    }
+    .chat{display:flex;flex-direction:column;gap:10px;height:68vh}
+    .msgs{
+      flex:1;overflow:auto;border:1px solid var(--line);border-radius:16px;
+      background:rgba(0,0,0,.22);padding:12px;
+    }
+    .msg{margin:10px 0;display:flex;gap:10px}
+    .bubble{
+      padding:10px 12px;border-radius:16px;max-width:92%;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.05);
+      line-height:1.8; white-space:pre-wrap;
+    }
+    .me{justify-content:flex-end}
+    .me .bubble{background:rgba(122,167,255,.14);border-color:rgba(122,167,255,.22)}
+    .ai .bubble{background:rgba(94,234,212,.09);border-color:rgba(94,234,212,.18)}
+    .tag{font-size:11px;color:var(--muted2);margin-bottom:4px}
+    .footer{padding:18px 0;color:var(--muted2);font-size:12px;text-align:center}
+    .watermark{
+      position:fixed;left:10px;bottom:10px;z-index:10;
+      font-size:11px;color:rgba(255,255,255,.14);
+      pointer-events:none;user-select:none;
+      transform: rotate(-8deg);
+    }
+    .toast{
+      position:fixed;right:12px;bottom:12px;z-index:9999;
+      padding:10px 12px;border-radius:14px;border:1px solid var(--line);
+      background:rgba(12,18,40,.86);box-shadow:var(--shadow);
+      display:none;max-width:min(520px, 92vw);
+    }
+    .toast.show{display:block}
+    code{background:rgba(0,0,0,.25);border:1px solid var(--line);padding:2px 6px;border-radius:10px}
+  </style>
+</head>
+<body>
+  <div class="watermark">AMMARNASIR+//i\-CADEMY • Chemistry • Student</div>
+  <header>
+    <div class="topbar">
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div>
+          <h1>AMMARNASIR+//i\-CADEMY</h1>
+          <div class="sub" id="subtitle">منصّة كيمياء تفاعلية (الرابع/الخامس/السادس العلمي)</div>
+        </div>
+      </div>
+      <div class="controls">
+        <div class="pill"><span id="modeLabel">الوضع</span>: <b id="appMode">Web • PDF-first • BYO AI Key</b></div>
+        <button class="btn ghost" id="langBtn">English</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div class="grid cols">
+      <div class="card">
+        <div class="hd">
+          <div class="t" id="navTitle">الأقسام</div>
+          <div class="d" id="navDesc">اختر المرحلة، ثم اختر ما تريد: كتاب، ملزمة، حلول، أو وزاريات (للسادس فقط)، ثم استخدم الدردشة للشرح والحل.</div>
+        </div>
+        <div class="bd">
+          <div class="tabs" id="gradeTabs">
+            <button class="tab active" data-grade="g6" id="tabG6">السادس</button>
+            <button class="tab" data-grade="g5" id="tabG5">الخامس</button>
+            <button class="tab" data-grade="g4" id="tabG4">الرابع</button>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="tabs" id="pageTabs">
+            <button class="tab active" data-page="book" id="pBook">الكتاب</button>
+            <button class="tab" data-page="notes" id="pNotes">الملزمة</button>
+            <button class="tab" data-page="solutions" id="pSol">حلول</button>
+            <button class="tab" data-page="wazari" id="pWaz">وزاريات</button>
+            <button class="tab" data-page="chat" id="pChat">دردشة AI</button>
+            <button class="tab" data-page="how" id="pHow">طريقة الاستخدام</button>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="kpi">
+            <div class="box"><b id="kpi1t">المرحلة</b><span id="kpiGrade">السادس العلمي</span></div>
+            <div class="box"><b id="kpi2t">مرجع</b><span id="kpiRef">PDF الكتاب + دليل المدرس</span></div>
+            <div class="box"><b id="kpi3t">AI</b><span id="kpiAI">اختياري • كل طالب بمفتاحه</span></div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="hint" id="deployHint">
+            <b>مهم:</b> حتى تعمل الـPDF والبحث بشكل صحيح، افتح الصفحة عبر رابط (GitHub Pages/Netlify) أو عبر سيرفر محلي. فتحها مباشرة كملف (file://) قد يسبب مشاكل.
+            <div style="margin-top:8px">ضع ملفات PDF بنفس مجلد هذه الصفحة بأسماء:</div>
+            <div style="margin-top:6px"><code>book_g4.pdf</code> • <code>book_g5.pdf</code> • <code>book_g6.pdf</code> • <code>teacher_guide.pdf</code></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="hd">
+          <div class="t" id="pageTitle">الكتاب</div>
+          <div class="d" id="pageDesc">افتح PDF، وابحث داخل النص، ثم اسأل الذكاء الصناعي مع اقتباس من الصفحات ذات الصلة.</div>
+        </div>
+        <div class="bd">
+          <div class="section active" id="sec-book">
+            <div class="two">
+              <div>
+                <div class="row">
+                  <button class="btn primary" id="openPdfBtn">فتح PDF</button>
+                  <button class="btn" id="buildIndexBtn">بناء فهرس النص (مرة واحدة)</button>
+                  <button class="btn" id="clearIndexBtn">مسح الفهرس</button>
+                </div>
+                <div class="divider"></div>
+                <div class="row">
+                  <input id="searchBox" placeholder="ابحث عن كلمة/موضوع داخل الكتاب… مثال: المولارية / الاتزان / الأوكسدة"/>
+                  <button class="btn" id="searchBtn">بحث</button>
+                </div>
+                <div class="hint" style="margin-top:10px" id="searchHint">
+                  <b>فكرة العمل:</b> نقرأ نص الـPDF (بـ pdf.js) ونبني فهرس داخل المتصفح. بعدها البحث يعطيك أفضل الصفحات، وتقدر تضيفها للدردشة كمقتطفات.
+                </div>
+                <div class="divider"></div>
+                <div class="row" style="justify-content:space-between">
+                  <span class="muted small" id="pdfStatus">لم يتم تحميل PDF بعد.</span>
+                  <span class="muted2 small" id="indexStatus">Index: غير جاهز</span>
+                </div>
+                <div class="divider"></div>
+                <div id="searchResults" class="hint" style="display:none"></div>
+              </div>
+              <div>
+                <div class="viewer">
+                  <embed id="pdfEmbed" type="application/pdf" style="width:100%;height:100%" />
+                </div>
+                <div class="row" style="margin-top:10px;justify-content:space-between;align-items:center">
+                  <span class="muted small" id="pdfName"></span>
+                  <span class="muted2 small" id="pdfPages"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="section" id="sec-notes">
+            <div class="two">
+              <div>
+                <div class="row">
+                  <button class="btn primary" id="exportNotesBtn">تصدير الملزمة (TXT)</button>
+                  <button class="btn" id="importNotesBtn">استيراد ملزمة (TXT)</button>
+                  <input id="importNotesFile" type="file" accept=".txt" style="display:none"/>
+                </div>
+                <div class="divider"></div>
+                <div class="hint" id="notesHint">
+                  هذه “ملزمة” رقمية داخل الصفحة. تكتب هنا شرح الفصل والمواضيع بأسلوبك أو بواسطة AI.
+                  <br/>نقطة مهمة: لكل مسألة حسابية اكتب: <b>القانون → المعطيات → التعويض → النتيجة</b>.
+                </div>
+                <div class="divider"></div>
+                <select id="notesTopic">
+                  <option value="intro">مقدمة الملزمة</option>
+                  <option value="ch1">الفصل 1</option><option value="ch2">الفصل 2</option><option value="ch3">الفصل 3</option>
+                  <option value="ch4">الفصل 4</option><option value="ch5">الفصل 5</option><option value="ch6">الفصل 6</option>
+                </select>
+                <div class="divider"></div>
+                <textarea id="notesArea" placeholder="اكتب شرحًا تفصيليًا…"></textarea>
+                <div class="row" style="margin-top:10px">
+                  <button class="btn primary" id="aiGenerateNotesBtn">توليد شرح تفصيلي (AI) + أمثلة</button>
+                  <button class="btn" id="saveNotesBtn">حفظ</button>
+                </div>
+                <div class="muted small" style="margin-top:10px" id="notesSaved">—</div>
+              </div>
+              <div>
+                <div class="hint">
+                  <b>قالب جاهز للمسائل الحسابية:</b><br/>
+                  1) <b>المطلوب</b>: …<br/>2) <b>المعطيات</b>: …<br/>3) <b>القانون</b>: …<br/>
+                  4) <b>التعويض</b>: …<br/>5) <b>الحساب خطوة بخطوة</b>: …<br/>6) <b>النتيجة</b>: … + الوحدة<br/><br/>
+                  <b>ربط بالحياة اليومية:</b> قدّم مثال (مختبر/صناعة/طب/بيئة/منزل) يوضح نفس الفكرة.
+                </div>
+                <div class="divider"></div>
+                <div class="hint"><b>ملاحظة:</b> اجعل الملزمة مطابقة للكتاب عبر البحث داخل PDF ثم اطلب من AI إعادة الشرح بطريقة سهلة.</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="section" id="sec-solutions">
+            <div class="hint" id="solHint">
+              هنا تضع “الأجوبة النموذجية” لكل تمرين وأسئلة نهاية الفصل (لكل مرحلة).<br/>
+              افتح الكتاب، حدد الصفحات، ثم اطلب من AI صياغة الحل نموذجياً مع خطوات التعويض الحسابي.
+            </div>
+            <div class="divider"></div>
+            <div class="two">
+              <div>
+                <select id="solChapter">
+                  <option value="ch1">الفصل 1</option><option value="ch2">الفصل 2</option><option value="ch3">الفصل 3</option>
+                  <option value="ch4">الفصل 4</option><option value="ch5">الفصل 5</option><option value="ch6">الفصل 6</option>
+                </select>
+                <div class="divider"></div>
+                <textarea id="solArea" placeholder="الصق هنا حل التمارين/أسئلة نهاية الفصل…"></textarea>
+                <div class="row" style="margin-top:10px">
+                  <button class="btn primary" id="aiGenerateSolBtn">توليد حلول نموذجية من مقتطفات الكتاب (AI)</button>
+                  <button class="btn" id="saveSolBtn">حفظ</button>
+                  <button class="btn" id="exportSolBtn">تصدير</button>
+                </div>
+                <div class="muted small" style="margin-top:10px" id="solSaved">—</div>
+              </div>
+              <div>
+                <div class="hint">
+                  <b>نصيحة:</b> لا تكتب النتيجة فقط. اكتب “لماذا اخترت هذا القانون؟” مع الوحدة.<br/>
+                  <b>للمسائل:</b> اذكر تحويل الوحدات قبل التعويض.
+                </div>
+                <div class="divider"></div>
+                <div class="hint"><b>دليل المدرس:</b> يساعد بالتأكد من الحل، لكن المرجع النهائي: كتاب الطالب.</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="section" id="sec-wazari">
+            <div class="hint" id="wazHint">
+              قسم الوزاريات خاص بالسادس العلمي: من 2015 إلى آخر سنة.<br/>
+              تخزين محلي داخل المتصفح (استيراد/تصدير JSON).
+            </div>
+            <div class="divider"></div>
+            <div class="row">
+              <button class="btn primary" id="wzExport">تصدير الوزاريات (JSON)</button>
+              <button class="btn" id="wzImport">استيراد وزاريات (JSON)</button>
+              <input id="wzFile" type="file" accept=".json" style="display:none"/>
+            </div>
+            <div class="divider"></div>
+            <div class="two">
+              <div>
+                <div class="row">
+                  <select id="wzYear"></select>
+                  <button class="btn" id="wzNewYear">إضافة سنة</button>
+                  <button class="btn" id="wzDeleteYear">حذف سنة</button>
+                </div>
+                <div class="divider"></div>
+                <textarea id="wzArea" placeholder="الصق أسئلة الوزاريات هنا (مع الحلول النموذجية)…"></textarea>
+                <div class="row" style="margin-top:10px">
+                  <button class="btn primary" id="aiWzSolve">حلول نموذجية (AI)</button>
+                  <button class="btn" id="wzSave">حفظ</button>
+                </div>
+                <div class="muted small" style="margin-top:10px" id="wzSaved">—</div>
+              </div>
+              <div>
+                <div class="hint">
+                  لكل سؤال وزاري خزّن: التصنيف + الصعوبة + خطوات الحل + خطأ شائع.<br/>
+                  والذكاء يستطيع توليد نماذج مشابهة بتغيير المعطيات.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="section" id="sec-chat">
+            <div class="two">
+              <div>
+                <div class="hint" id="aiHint">
+                  <b>دردشة الكيمياء:</b> كل طالب يربط مزوّد AI بمفتاحه (اختياري).<br/>
+                  <b>مهم:</b> غالبًا تحتاج Proxy (Netlify/Cloudflare) لأن CORS يمنع النداء المباشر من المتصفح.<br/>
+                  وضع “Local” يعمل بدون API ويساعد بتنسيق الحل خطوة بخطوة.
+                </div>
+                <div class="divider"></div>
+                <div class="two">
+                  <div>
+                    <label class="small muted" id="providerLbl">مزوّد الذكاء</label>
+                    <select id="provider">
+                      <option value="none">بدون API (Local)</option>
+                      <option value="openai">OpenAI</option>
+                      <option value="anthropic">Anthropic (Claude)</option>
+                      <option value="gemini">Google Gemini</option>
+                      <option value="custom">Custom Proxy</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="small muted" id="apiKeyLbl">API Key</label>
+                    <input id="apiKey" placeholder="ضع مفتاحك هنا… (يُحفظ على جهاز الطالب فقط)"/>
+                  </div>
+                </div>
+                <div class="divider"></div>
+                <label class="small muted" id="proxyLbl">Proxy URL (اختياري)</label>
+                <input id="proxyUrl" placeholder="مثال: https://YOUR-SITE.netlify.app/.netlify/functions/ai"/>
+                <div class="row" style="margin-top:10px">
+                  <button class="btn primary" id="saveAI">حفظ الإعدادات</button>
+                  <button class="btn" id="testAI">اختبار اتصال</button>
+                  <button class="btn" id="insertBookCite">إضافة مقتطفات من الكتاب</button>
+                </div>
+                <div class="muted small" style="margin-top:10px" id="aiSaved">—</div>
+                <div class="divider"></div>
+                <div class="hint" id="howKeys">
+                  <b>طريقة الحصول على المفتاح:</b> OpenAI/Anthropic/Gemini من لوحاتهم الرسمية، ثم يوضع هنا. المفتاح يبقى محليًا.
+                </div>
+              </div>
+              <div>
+                <div class="chat">
+                  <div class="msgs" id="msgs"></div>
+                  <div class="row">
+                    <input id="q" placeholder="اكتب سؤالك… مثال: احسب المولارية إذا…"/>
+                    <button class="btn primary" id="send">إرسال</button>
+                  </div>
+                  <div class="row">
+                    <button class="btn" id="clearChat">مسح</button>
+                    <button class="btn" id="exportChat">تصدير</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="section" id="sec-how">
+            <div class="hint" id="howText">
+              <b>طريقة الاستخدام:</b><br/><br/>
+              1) اختر المرحلة.<br/>
+              2) افتح “الكتاب” → “فتح PDF”.<br/>
+              3) “بناء فهرس النص” مرة واحدة ثم ابحث عن الموضوع.<br/>
+              4) “إضافة مقتطفات” ثم اسأل AI ليجيب بدقة مع صفحات.<br/>
+              5) “الملزمة” للشرح المفصل + أمثلة + حلول خطوة بخطوة.<br/>
+              6) “حلول” للأجوبة النموذجية للتمارين ونهاية الفصل.<br/>
+              7) للسادس فقط: “وزاريات” 2015+ مع استيراد/تصدير سنوي.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">© AMMARNASIR+//i\-CADEMY • Single-file HTML • PDF-first learning • Student BYO AI Key</div>
+  </main>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.js"></script>
+
+  <script>
+  const LS = {lang:"i_lang", grade:"i_grade", notes:"i_notes_v1", solutions:"i_solutions_v1", wazari:"i_wazari_v1", ai:"i_ai_v1", pdfIndex:"i_pdf_index_v1"};
+  let lang = localStorage.getItem(LS.lang) || "ar";
+  let grade = localStorage.getItem(LS.grade) || "g6";
+  let page = "book";
+
+  const PDF_FILES = {g4:"book_g4.pdf", g5:"book_g5.pdf", g6:"book_g6.pdf", guide:"teacher_guide.pdf"};
+
+  let pdfDoc=null;
+  let pdfTextIndex=null;
+  let lastSearchSnips=[];
+
+  const $ = (id)=>document.getElementById(id);
+  function toast(msg){ const t=$("toast"); t.textContent=msg; t.classList.add("show"); setTimeout(()=>t.classList.remove("show"), 2600); }
+  function setLang(newLang){ lang=newLang; localStorage.setItem(LS.lang,lang); document.documentElement.lang=lang; document.documentElement.dir=(lang==="ar")?"rtl":"ltr"; renderTexts(); }
+  function norm(s){ return (s||"").toLowerCase().replace(/[\u064B-\u065F\u0670]/g,"").replace(/[^\p{L}\p{N}\s]+/gu," ").replace(/\s+/g," ").trim(); }
+  function tokens(s){ const stop=new Set(["من","الى","على","في","عن","مع","هذا","هذه","ذلك","تلك","the","and","or","to","of","in","on","a","an"]); return Array.from(new Set(norm(s).split(" ").filter(w=>w.length>1 && !stop.has(w)))).slice(0,24); }
+  function scorePage(toks,text){ const nt=norm(text); let sc=0; for(const w of toks){ if(nt.includes(w)) sc+=3; if(w.length>=5 && nt.includes(w.slice(0,4))) sc+=1; } return sc; }
+  function currentPdfFile(){ if(grade==="g4") return PDF_FILES.g4; if(grade==="g5") return PDF_FILES.g5; return PDF_FILES.g6; }
+  function escapeHtml(str){ return (str||"").replace(/[&<>"']/g, m=>({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;" }[m])); }
+
+  function activateTabs(){
+    document.querySelectorAll("#gradeTabs .tab").forEach(b=>b.classList.toggle("active", b.dataset.grade===grade));
+    document.querySelectorAll("#pageTabs .tab").forEach(b=>b.classList.toggle("active", b.dataset.page===page));
+    document.querySelectorAll(".section").forEach(s=>s.classList.toggle("active", s.id==="sec-"+page));
+    $("pWaz").style.display = (grade==="g6") ? "" : "none";
+  }
+
+  function renderTexts(){
+    $("langBtn").textContent = (lang==="ar") ? "English" : "العربية";
+    $("subtitle").textContent = (lang==="ar") ? "منصّة كيمياء تفاعلية (الرابع/الخامس/السادس العلمي)" : "Interactive Chemistry Platform (Grade 4/5/6)";
+    $("navTitle").textContent = (lang==="ar") ? "الأقسام" : "Sections";
+    $("navDesc").textContent = (lang==="ar") ? "اختر المرحلة، ثم اختر ما تريد: كتاب، ملزمة، حلول، أو وزاريات (للسادس فقط)، ثم استخدم الدردشة للشرح والحل." : "Pick a grade, then choose: Book, Notes, Solutions, or Wazari (G6). Use AI chat.";
+    const gName = (grade==="g4") ? (lang==="ar"?"الرابع العلمي":"Grade 4") : (grade==="g5") ? (lang==="ar"?"الخامس العلمي":"Grade 5") : (lang==="ar"?"السادس العلمي":"Grade 6");
+    $("kpiGrade").textContent = gName;
+
+    const titles = {
+      book: [lang==="ar"?"الكتاب":"Textbook", lang==="ar"?"افتح PDF وابنِ فهرس النص ثم اسأل مع مقتطفات من الصفحات.":"Open PDF, build index, ask with excerpts."],
+      notes:[lang==="ar"?"الملزمة":"Notes", lang==="ar"?"شرح تفصيلي + أمثلة + حلول خطوة بخطوة.":"Detailed notes + examples + step-by-step."],
+      solutions:[lang==="ar"?"حلول":"Solutions", lang==="ar"?"الأجوبة النموذجية للتمارين ونهاية الفصل.":"Model answers for exercises & end chapter."],
+      wazari:[lang==="ar"?"وزاريات":"Wazari", lang==="ar"?"للسادس فقط: 2015+ مع حلولها.":"Grade 6 only: 2015+ with solutions."],
+      chat:[lang==="ar"?"دردشة AI":"AI Chat", lang==="ar"?"ربط بالمفتاح أو Local Mode.":"Use key or Local mode."],
+      how:[lang==="ar"?"طريقة الاستخدام":"How to Use", lang==="ar"?"إرشادات سريعة لتشغيل كل شيء.":"Quick instructions."]
+    };
+    $("pageTitle").textContent = titles[page][0];
+    $("pageDesc").textContent = titles[page][1];
+    activateTabs();
+  }
+
+  document.querySelectorAll("#gradeTabs .tab").forEach(b=>{
+    b.addEventListener("click", ()=>{
+      grade=b.dataset.grade; localStorage.setItem(LS.grade,grade);
+      if(grade!=="g6" && page==="wazari") page="book";
+      pdfDoc=null; $("pdfEmbed").removeAttribute("src"); $("pdfStatus").textContent=(lang==="ar")?"لم يتم تحميل PDF بعد.":"PDF not loaded.";
+      $("pdfName").textContent=""; $("pdfPages").textContent="";
+      renderTexts(); loadWazariUI(); loadNotesUI(); loadSolutionsUI();
+    });
+  });
+  document.querySelectorAll("#pageTabs .tab").forEach(b=>{
+    b.addEventListener("click", ()=>{
+      const p=b.dataset.page; if(p==="wazari" && grade!=="g6") return; page=p; renderTexts();
+    });
+  });
+  $("langBtn").addEventListener("click", ()=>setLang(lang==="ar"?"en":"ar"));
+
+  async function openPdf(){
+    const file=currentPdfFile();
+    $("pdfEmbed").setAttribute("src", file);
+    $("pdfName").textContent=file;
+    $("pdfStatus").textContent=(lang==="ar")?"يحاول تحميل PDF…":"Loading PDF…";
+    try{
+      pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.worker.min.js";
+      const task=pdfjsLib.getDocument(file);
+      pdfDoc=await task.promise;
+      $("pdfStatus").textContent=(lang==="ar")?"تم تحميل PDF.":"PDF loaded.";
+      $("pdfPages").textContent=(lang==="ar")?("عدد الصفحات: "+pdfDoc.numPages):("Pages: "+pdfDoc.numPages);
+    }catch(e){
+      console.error(e);
+      $("pdfStatus").textContent=(lang==="ar")?"فشل تحميل PDF. تأكد من وجود الملف بجانب الصفحة وفتحها عبر رابط.":"Failed to load PDF. Put the file next to HTML and open via hosted URL.";
+      toast((lang==="ar")?"تعذر تحميل PDF":"PDF load failed");
+    }
+  }
+
+  function loadPdfIndexFromStorage(){ try{ const raw=localStorage.getItem(LS.pdfIndex); if(!raw) return null; const obj=JSON.parse(raw); if(obj && obj.file===currentPdfFile()) return obj; return null; }catch{return null;} }
+  function setIndexStatus(){
+    const idx=loadPdfIndexFromStorage();
+    if(idx && idx.pages && idx.pages.length){ $("indexStatus").textContent="Index: OK ("+idx.pages.length+" pages)"; pdfTextIndex=idx; }
+    else{ $("indexStatus").textContent=(lang==="ar")?"Index: غير جاهز":"Index: not ready"; pdfTextIndex=null; }
+  }
+
+  async function buildIndex(){
+    if(!pdfDoc){ await openPdf(); if(!pdfDoc) return; }
+    const file=currentPdfFile();
+    $("indexStatus").textContent=(lang==="ar")?"Index: يبني…":"Index: building…";
+    toast((lang==="ar")?"يبني الفهرس…":"Building index…");
+    const pages=[];
+    for(let i=1;i<=pdfDoc.numPages;i++){
+      const pg=await pdfDoc.getPage(i);
+      const tc=await pg.getTextContent();
+      const strings=tc.items.map(it=>it.str).join(" ");
+      pages.push({n:i,text:strings});
+      if(i%10===0) $("indexStatus").textContent=(lang==="ar")?("Index: "+i+"/"+pdfDoc.numPages):("Index: "+i+"/"+pdfDoc.numPages);
+    }
+    const idx={file, builtAt:Date.now(), pages};
+    localStorage.setItem(LS.pdfIndex, JSON.stringify(idx));
+    setIndexStatus(); toast((lang==="ar")?"تم بناء الفهرس":"Index built");
+  }
+  function clearIndex(){ localStorage.removeItem(LS.pdfIndex); pdfTextIndex=null; setIndexStatus(); $("searchResults").style.display="none"; toast((lang==="ar")?"تم مسح الفهرس":"Index cleared"); }
+
+  function searchInIndex(q){
+    const idx=loadPdfIndexFromStorage();
+    if(!idx){ toast((lang==="ar")?"ابنِ الفهرس أولاً":"Build index first"); return; }
+    const toks=tokens(q);
+    const scored=idx.pages.map(p=>({n:p.n,text:p.text,s:scorePage(toks,p.text)})).filter(x=>x.s>0).sort((a,b)=>b.s-a.s).slice(0,6);
+    lastSearchSnips=scored.map(x=>{
+      const t=x.text||""; const nt=norm(t);
+      let pos=-1; for(const w of toks){ pos=nt.indexOf(w); if(pos!==-1) break; }
+      const start=Math.max(0,pos-220); const snip=t.slice(start,start+900);
+      return {page:x.n, snip};
+    });
+    const box=$("searchResults");
+    if(!scored.length){ box.style.display="block"; box.textContent=(lang==="ar")?"لا توجد نتائج.":"No results."; return; }
+    box.style.display="block";
+    box.innerHTML=(lang==="ar")?("<b>أفضل الصفحات:</b><br>"+lastSearchSnips.map(s=>`• صفحة ${s.page}: ${escapeHtml(s.snip)}…`).join("<br><br>"))
+                             :("<b>Top pages:</b><br>"+lastSearchSnips.map(s=>`• p${s.page}: ${escapeHtml(s.snip)}…`).join("<br><br>"));
+    try{ $("pdfEmbed").setAttribute("src", currentPdfFile()+"#page="+lastSearchSnips[0].page); }catch{}
+  }
+
+  $("openPdfBtn").addEventListener("click", openPdf);
+  $("buildIndexBtn").addEventListener("click", buildIndex);
+  $("clearIndexBtn").addEventListener("click", clearIndex);
+  $("searchBtn").addEventListener("click", ()=>searchInIndex($("searchBox").value));
+  $("searchBox").addEventListener("keydown", (e)=>{ if(e.key==="Enter") searchInIndex($("searchBox").value); });
+
+  // Notes storage
+  function loadNotesAll(){ try{return JSON.parse(localStorage.getItem(LS.notes)||"{}")}catch{return {}} }
+  function saveNotesAll(o){ localStorage.setItem(LS.notes, JSON.stringify(o)); }
+  function keyNotes(){ return grade+"::"+$("notesTopic").value; }
+  function loadNotesUI(){ const all=loadNotesAll(); const k=keyNotes(); $("notesArea").value=all[k]||""; $("notesSaved").textContent=all[k]?((lang==="ar")?"تم التحميل":"Loaded"):"—"; }
+  $("notesTopic").addEventListener("change", loadNotesUI);
+  $("saveNotesBtn").addEventListener("click", ()=>{ const all=loadNotesAll(); all[keyNotes()]=$("notesArea").value; saveNotesAll(all); $("notesSaved").textContent=(lang==="ar")?("تم الحفظ: "+new Date().toLocaleString()):("Saved: "+new Date().toLocaleString()); toast((lang==="ar")?"تم حفظ الملزمة":"Notes saved"); });
+  $("exportNotesBtn").addEventListener("click", ()=>{ const all=loadNotesAll(); const payload={grade, exportedAt:Date.now(), data:Object.fromEntries(Object.entries(all).filter(([k])=>k.startsWith(grade+"::")))}; download("mulazama_"+grade+".txt", JSON.stringify(payload,null,2)); });
+  $("importNotesBtn").addEventListener("click", ()=>$("importNotesFile").click());
+  $("importNotesFile").addEventListener("change", async ()=>{ const f=$("importNotesFile").files[0]; if(!f) return; const text=await f.text(); try{ const obj=JSON.parse(text); const all=loadNotesAll(); for(const [k,v] of Object.entries(obj.data||{})) all[k]=v; saveNotesAll(all); loadNotesUI(); toast((lang==="ar")?"تم الاستيراد":"Imported"); }catch{ toast((lang==="ar")?"ملف غير صالح":"Invalid file"); } });
+
+  // Solutions storage
+  function loadSolAll(){ try{return JSON.parse(localStorage.getItem(LS.solutions)||"{}")}catch{return {}} }
+  function saveSolAll(o){ localStorage.setItem(LS.solutions, JSON.stringify(o)); }
+  function solKey(){ return grade+"::"+$("solChapter").value; }
+  function loadSolutionsUI(){ const all=loadSolAll(); $("solArea").value=all[solKey()]||""; $("solSaved").textContent=all[solKey()]?((lang==="ar")?"تم التحميل":"Loaded"):"—"; }
+  $("solChapter").addEventListener("change", loadSolutionsUI);
+  $("saveSolBtn").addEventListener("click", ()=>{ const all=loadSolAll(); all[solKey()]=$("solArea").value; saveSolAll(all); $("solSaved").textContent=(lang==="ar")?("تم الحفظ: "+new Date().toLocaleString()):("Saved: "+new Date().toLocaleString()); toast((lang==="ar")?"تم حفظ الحلول":"Saved"); });
+  $("exportSolBtn").addEventListener("click", ()=>{ const all=loadSolAll(); const payload={grade, exportedAt:Date.now(), data:Object.fromEntries(Object.entries(all).filter(([k])=>k.startsWith(grade+"::")))}; download("solutions_"+grade+".txt", JSON.stringify(payload,null,2)); });
+
+  // Wazari storage
+  function loadWz(){ try{return JSON.parse(localStorage.getItem(LS.wazari)||"{}")}catch{return {}} }
+  function saveWz(o){ localStorage.setItem(LS.wazari, JSON.stringify(o)); }
+  function ensureWz(){ const o=loadWz(); if(!o.years){ o.years={}; for(let y=2015;y<=new Date().getFullYear();y++) o.years[String(y)]=""; saveWz(o);} return o; }
+  function loadWazariUI(){
+    const o=ensureWz(); const sel=$("wzYear"); sel.innerHTML="";
+    Object.keys(o.years).sort((a,b)=>Number(b)-Number(a)).forEach(y=>{ const op=document.createElement("option"); op.value=y; op.textContent=y; sel.appendChild(op); });
+    if(!sel.value) sel.value=String(new Date().getFullYear());
+    $("wzArea").value=o.years[sel.value]||""; $("wzSaved").textContent="—";
+  }
+  $("wzYear").addEventListener("change", ()=>{ const o=ensureWz(); $("wzArea").value=o.years[$("wzYear").value]||""; });
+  $("wzSave").addEventListener("click", ()=>{ const o=ensureWz(); o.years[$("wzYear").value]=$("wzArea").value; saveWz(o); $("wzSaved").textContent=(lang==="ar")?("تم الحفظ: "+new Date().toLocaleString()):("Saved: "+new Date().toLocaleString()); toast((lang==="ar")?"تم":"Saved"); });
+  $("wzNewYear").addEventListener("click", ()=>{ const y=prompt(lang==="ar"?"اكتب السنة":"Enter year"); if(!y) return; const o=ensureWz(); o.years[String(y)]=o.years[String(y)]||""; saveWz(o); loadWazariUI(); });
+  $("wzDeleteYear").addEventListener("click", ()=>{ const y=$("wzYear").value; if(!confirm(((lang==="ar")?"حذف ":"Delete ")+y+"?")) return; const o=ensureWz(); delete o.years[y]; saveWz(o); loadWazariUI(); });
+  $("wzExport").addEventListener("click", ()=>{ const o=ensureWz(); download("wazari_g6.json", JSON.stringify(o,null,2)); });
+  $("wzImport").addEventListener("click", ()=>$("wzFile").click());
+  $("wzFile").addEventListener("change", async ()=>{ const f=$("wzFile").files[0]; if(!f) return; const text=await f.text(); try{ const obj=JSON.parse(text); saveWz(obj); loadWazariUI(); toast((lang==="ar")?"تم الاستيراد":"Imported"); }catch{ toast((lang==="ar")?"ملف غير صالح":"Invalid"); } });
+
+  // AI + Chat
+  function loadAI(){ try{return JSON.parse(localStorage.getItem(LS.ai)||"{}")}catch{return {}} }
+  function saveAIObj(o){ localStorage.setItem(LS.ai, JSON.stringify(o)); }
+  function syncAIUI(){ const o=loadAI(); $("provider").value=o.provider||"none"; $("apiKey").value=o.apiKey||""; $("proxyUrl").value=o.proxyUrl||""; $("aiSaved").textContent=o.provider?((lang==="ar")?"محفوظ":"Saved"):"—"; }
+  $("saveAI").addEventListener("click", ()=>{ const o={provider:$("provider").value, apiKey:$("apiKey").value.trim(), proxyUrl:$("proxyUrl").value.trim()}; saveAIObj(o); $("aiSaved").textContent=(lang==="ar")?("تم الحفظ: "+new Date().toLocaleString()):("Saved: "+new Date().toLocaleString()); toast((lang==="ar")?"تم حفظ الإعدادات":"Saved"); });
+
+  function addMsg(role,text){
+    const div=document.createElement("div"); div.className="msg "+(role==="me"?"me":"ai");
+    const b=document.createElement("div"); b.className="bubble";
+    const tag=document.createElement("div"); tag.className="tag"; tag.textContent=(role==="me")?((lang==="ar")?"أنت":"You"):((lang==="ar")?"الذكاء":"AI");
+    b.appendChild(tag); b.appendChild(document.createTextNode(text));
+    div.appendChild(b); $("msgs").appendChild(div); $("msgs").scrollTop=$("msgs").scrollHeight;
+  }
+  function download(name, content){
+    const blob=new Blob([content],{type:"text/plain;charset=utf-8"});
+    const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=name; document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(()=>URL.revokeObjectURL(a.href), 1200);
+  }
+  function exportChat(){
+    const lines=[]; document.querySelectorAll("#msgs .msg").forEach(m=>{
+      const isMe=m.classList.contains("me");
+      const txt=m.querySelector(".bubble").innerText.replace(/^(أنت|You)\n/,"").replace(/^(الذكاء|AI)\n/,"");
+      lines.push((isMe?"ME: ":"AI: ")+txt);
+    });
+    download("chat.txt", lines.join("\n\n"));
+  }
+  $("exportChat").addEventListener("click", exportChat);
+  $("clearChat").addEventListener("click", ()=>{ $("msgs").innerHTML=""; toast((lang==="ar")?"تم مسح":"Cleared"); });
+
+  function buildLocalAssistAnswer(question){
+    const cite = lastSearchSnips.length ? ("\n\n"+(lang==="ar"?"مقتطفات من الكتاب:\n":"Book excerpts:\n")+lastSearchSnips.map(s=>(lang==="ar"?`[صفحة ${s.page}] `:`[p${s.page}] `)+s.snip).join("\n\n")) : "";
+    const header=(lang==="ar")?"سأساعدك بدون API بخطوات الحل:\n":"No-API structured help:\n";
+    const plan=(lang==="ar")?"1) المطلوب\n2) المعطيات\n3) القانون ولماذا\n4) التعويض\n5) الحساب خطوة بخطوة\n6) النتيجة + الوحدة\n7) خطأ شائع\n"
+                           :"1) Asked\n2) Given\n3) Formula (why)\n4) Substitute\n5) Steps\n6) Final + units\n7) Common mistake\n";
+    return header+plan+cite;
+  }
+  function makeChemSystemPrompt(){
+    const g=(grade==="g4")?"Grade 4 scientific chemistry":(grade==="g5")?"Grade 5 scientific chemistry":"Grade 6 scientific chemistry (Iraq)";
+    const refs=`Primary references: ${currentPdfFile()} + teacher_guide.pdf (secondary).`;
+    const style=(lang==="ar")?"اكتب شرحاً واضحاً لعمر 16+، مع أمثلة من الحياة اليومية. للمسائل الحسابية: القانون ثم التعويض ثم خطوات الحساب ثم النتيجة مع الوحدة."
+                             :"Explain clearly for 16+, everyday examples. For calculations: formula→substitution→steps→final with units.";
+    const cite=lastSearchSnips.length?("\nUse these excerpts and cite pages:\n"+lastSearchSnips.map(s=>`[p${s.page}] ${s.snip}`).join("\n\n"))
+                                    :"\nIf no excerpts, ask the student to search the PDF and add excerpts first.";
+    return `${g}\n${refs}\n${style}\n${cite}`;
+  }
+  function buildPayload(provider, question){ return {provider, apiKey:$("apiKey").value.trim(), grade, lang, system:makeChemSystemPrompt(), user:question}; }
+
+  async function callAI(question){
+    const cfg=loadAI(); const provider=cfg.provider||"none";
+    if(provider==="none" || !cfg.apiKey) return buildLocalAssistAnswer(question);
+
+    if(cfg.proxyUrl){
+      const res=await fetch(cfg.proxyUrl,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(buildPayload(provider,question))});
+      if(!res.ok) throw new Error("Proxy HTTP "+res.status);
+      const data=await res.json();
+      return data.text || JSON.stringify(data);
+    }
+
+    // Direct calls may fail due to CORS (proxy recommended)
+    if(provider==="openai"){
+      const res=await fetch("https://api.openai.com/v1/chat/completions",{method:"POST",headers:{"Content-Type":"application/json","Authorization":"Bearer "+cfg.apiKey},
+        body:JSON.stringify({model:"gpt-4.1-mini",messages:[{role:"system",content:makeChemSystemPrompt()},{role:"user",content:question}],temperature:0.3})});
+      if(!res.ok) throw new Error("OpenAI HTTP "+res.status);
+      const j=await res.json();
+      return j.choices?.[0]?.message?.content || "(no text)";
+    }
+    throw new Error("Direct call blocked غالباً. استخدم Proxy URL.");
+  }
+
+  $("insertBookCite").addEventListener("click", ()=>{
+    if(!lastSearchSnips.length){ toast((lang==="ar")?"ابحث داخل الكتاب أولاً":"Search first"); return; }
+    const cite=lastSearchSnips.map(s=>(lang==="ar"?`[صفحة ${s.page}] `:`[p${s.page}] `)+s.snip).join("\n\n");
+    $("q").value = ($("q").value?($("q").value+"\n\n"):"") + cite;
+    toast((lang==="ar")?"تمت الإضافة":"Added");
+  });
+
+  $("testAI").addEventListener("click", async ()=>{
+    try{ const ans=await callAI(lang==="ar"?"اختبار: اشرح مفهوم المول":"Test: explain mole"); addMsg("ai", ans); toast((lang==="ar")?"تم":"OK"); }
+    catch(e){ console.error(e); addMsg("ai", (lang==="ar"?"فشل الاتصال. استخدم Proxy.\n":"Failed. Use proxy.\n")+e.message); toast((lang==="ar")?"فشل":"Failed"); }
+  });
+
+  $("send").addEventListener("click", async ()=>{
+    const question=$("q").value.trim(); if(!question) return;
+    $("q").value=""; addMsg("me", question); addMsg("ai", (lang==="ar")?"…":"…");
+    const last=$("msgs").lastElementChild;
+    try{ const ans=await callAI(question); last.querySelector(".bubble").lastChild.nodeValue=ans; }
+    catch(e){ last.querySelector(".bubble").lastChild.nodeValue=(lang==="ar"?"تعذر جلب الإجابة. استخدم Proxy.\n\n":"Failed. Use proxy.\n\n")+e.message; }
+  });
+
+  $("aiGenerateNotesBtn").addEventListener("click", async ()=>{
+    const topic=$("notesTopic").value;
+    const prompt=(lang==="ar")?`اكتب شرحاً تفصيلياً للـ ${topic} لمرحلة ${grade} مع أمثلة حياتية. للمسائل: القانون ثم التعويض ثم الحساب. أضف 6 أسئلة تدريبية.`:
+                             `Write detailed notes for ${topic} for ${grade}, everyday examples, formula→substitute→steps. Add 6 practice questions.`;
+    try{ const ans=await callAI(prompt); $("notesArea").value = ($("notesArea").value?($("notesArea").value+"\n\n"):"")+ans; toast((lang==="ar")?"تم":"Done"); }catch{ toast((lang==="ar")?"فشل":"Failed"); }
+  });
+
+  $("aiGenerateSolBtn").addEventListener("click", async ()=>{
+    const ch=$("solChapter").value;
+    const prompt=(lang==="ar")?`اكتب حلولاً نموذجية لـ ${ch} لمرحلة ${grade}: المطلوب/المعطيات/القانون/التعويض/الحساب/النتيجة+الوحدة.`:
+                             `Write model solutions for ${ch} in ${grade}: asked/given/formula/substitute/steps/final+units.`;
+    try{ const ans=await callAI(prompt); $("solArea").value = ($("solArea").value?($("solArea").value+"\n\n"):"")+ans; toast((lang==="ar")?"تم":"Done"); }catch{ toast((lang==="ar")?"فشل":"Failed"); }
+  });
+
+  $("aiWzSolve").addEventListener("click", async ()=>{
+    if(grade!=="g6"){ toast((lang==="ar")?"للسادس فقط":"G6 only"); return; }
+    const y=$("wzYear").value;
+    const prompt=(lang==="ar")?`حلّل أسئلة وزاري سنة ${y} واكتب حلول نموذجية خطوة بخطوة وصنّفها حسب الموضوع.`:
+                             `For Wazari ${y}, write step-by-step model solutions and tag by topic.`;
+    try{ const ans=await callAI(prompt); $("wzArea").value = ($("wzArea").value?($("wzArea").value+"\n\n"):"")+ans; toast((lang==="ar")?"تم":"Done"); }catch{ toast((lang==="ar")?"فشل":"Failed"); }
+  });
+
+  function init(){
+    document.documentElement.lang=lang; document.documentElement.dir=(lang==="ar")?"rtl":"ltr";
+    if(grade!=="g6" && page==="wazari") page="book";
+    renderTexts(); setIndexStatus(); loadNotesUI(); loadSolutionsUI(); loadWazariUI(); syncAIUI();
+    addMsg("ai", (lang==="ar")?"مرحباً 👋\nاختر المرحلة، افتح الكتاب، ابنِ الفهرس، ثم اسألني. إذا ما عندك مفتاح، وضع Local يساعدك بخطوات الحل."
+                             :"Hi 👋\nPick a grade, open PDF, build index, then ask. Without a key, Local mode still guides you.");
+  }
+  init();
+  </script>
+</body>
+</html>
